@@ -76,7 +76,7 @@ const deleteImage = (state, { id } ) => {
 
   delete newData[id]
 
-  adminUpdateImages(newData) // update after delete image, otherwise wrong sequence
+  adminUpdateImages(newData, null, true) // update after delete image, otherwise wrong sequence
 
   return {
     ...state,

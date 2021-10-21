@@ -7,11 +7,11 @@ export const getTitleImage = (id, title) => {
 
   return new Promise((resolve, reject) => {
     api.post('album/textToImg', {
-      "customer": mode == 'admin' ? null : store.getState().status.customerId,
+      "customer": (mode == 'demo' || mode == 'admin') ? null : store.getState().status.customerId,
       "order_item": store.getState().status.productId,
       "photo_uuid": id,
       "title": title,
-      "mode": mode == 'admin' ? 1 : 2,
+      "mode": mode == 'demo' ? 0 : (mode == 'admin' ? 1 : 2),
     })
     .then((response) => {
       if (response.data.status == 200) {

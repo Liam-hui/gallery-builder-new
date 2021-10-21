@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useSelector } from "react-redux"
 import store from '../store'
 import { isMobile } from 'react-device-detect'
 
 import Icon from '@mdi/react'
-import { mdiRedoVariant, mdiPlusThick, mdiArrowLeftBold, mdiMagnifyPlusOutline, mdiMagnifyMinusOutline } from '@mdi/js'
+import { mdiRedoVariant, mdiPlusThick, mdiArrowLeftBold, mdiMagnifyPlusOutline, mdiMagnifyMinusOutline, mdiCloseThick } from '@mdi/js'
 
 import translate from '../utils/translate'
 import ObjectItem from './Object'
@@ -20,6 +20,7 @@ const Editor = () => {
   const currentImageId = useSelector(state => state.images.selected)
   const currentImage = images[currentImageId]
   const history = currentImage?.history
+  const isSelectingHead = useSelector(state => state.heads.isSelecting)
 
   const [editorScale, setEditorScale] = useState(1)
   const editorAreaWrapperRef = useRef()
@@ -118,15 +119,9 @@ const Editor = () => {
   }
 
   // message
-  const isSelectingHead = useSelector(state => state.heads.isSelecting)
   const [message, setMessage] = useState('')
-  useEffect(() => {
-    if (isMobile)
-      setMessage(isSelectingHead ? translate('chooseFace') : '')
-  }, [isSelectingHead])
 
   // zoom
-  const [object, setobject] = useState(null)
   const [isZoomed, setIsZoomed] = useState(false)
   const [zoomScale, setZoomScale] = useState(1)
   const [zoomOffset, setZoomOffset] = useState({ x: 0, y: 0 })
@@ -224,11 +219,11 @@ const Editor = () => {
         <div className="editor-area" style={{ ...editorAreaStyle, transform: `translate(${zoomOffset.x}px, ${zoomOffset.y}px) scale(${zoomScale})`, overflow: selectedItem ? 'visible' : 'hidden' }} >
 
           {currentImage?.heads && Object.entries(currentImage.heads).map(([id, head]) =>
-            <ObjectItem key={`${currentImageId}${id}`} id={id} imageId={currentImageId} data={head} imageSize={{ width: currentImage.width, height: currentImage.height }} type='head' isSelected={selectedItem?.id == id} setSelectedItem={setSelectedItem} transformStart={transformStart} editorScale={editorScale} setMessage={setMessage} /> 
+            <ObjectItem key={`${currentImageId}${id}`} id={id} imageId={currentImageId} data={head} imageSize={{ width: currentImage.width, height: currentImage.height }} type='head' isSelected={selectedItem?.id == id} setSelectedItem={setSelectedItem} transformStart={transformStart} editorScale={editorScale} zoomScale={zoomScale} setMessage={setMessage} /> 
           )}
 
           {currentImage?.titles && Object.entries(currentImage.titles).map(([id, title]) =>
-            <ObjectItem key={`${currentImageId}${id}`} id={id} imageId={currentImageId} data={title} imageSize={{ width: currentImage.width, height: currentImage.height }} type='title' isSelected={selectedItem?.id == id} setSelectedItem={setSelectedItem} transformStart={transformStart} editorScale={editorScale} setMessage={setMessage} /> 
+            <ObjectItem key={`${currentImageId}${id}`} id={id} imageId={currentImageId} data={title} imageSize={{ width: currentImage.width, height: currentImage.height }} type='title' isSelected={selectedItem?.id == id} setSelectedItem={setSelectedItem} transformStart={transformStart} editorScale={editorScale} zoomScale={zoomScale} setMessage={setMessage} /> 
           )}
 
         </div>
@@ -277,6 +272,19 @@ const Editor = () => {
       {isMobile && message != '' &&
         <div className="editor-message">
           {message}
+        </div>
+      }
+
+      {/* if selecting head */}
+      {isMobile && isSelectingHead &&
+        <div className="editor-message" style={{ zIndex: 9999999999, backgroundColor: '#CCCCCC' }}>
+          {translate('chooseFace')}
+          <Icon path={mdiCloseThick} size={0.9} color="black" style={{ marginLeft: 5, transform: 'translateX(5px)'}} 
+            onClick={() => {
+              store.dispatch({ type: 'SELECT_HEAD_END' })
+              store.dispatch({ type: 'HIDE_POPUP' })
+            }}
+          />
         </div>
       }
       

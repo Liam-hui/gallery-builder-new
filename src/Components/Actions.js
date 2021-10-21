@@ -1,15 +1,13 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import store from '../store'
 import { useSelector } from "react-redux"
 import * as htmlToImage from 'html-to-image';
 import { isMobile } from 'react-device-detect'
-import { toPng, toJpeg, toBlob, toPixelData, toSvg } from 'html-to-image';
 
 import translate from '../utils/translate'
 import { adminUploadImages, adminUpdateImages } from '../api/admin'
 import { userUpdateImages } from '../api/user'
 import { randomId } from '../utils/MyUtils'
-import { useEffect } from 'react/cjs/react.development';
 
 
 const Actions = () => {
@@ -100,16 +98,6 @@ const Actions = () => {
       adminUpdateImages(images) // images, success, isAutoSave
     }
   }
-
-  useEffect(() => {
-    //auto save when change image
-    if (mode == 'user') {
-      userUpdateImages(images, false, true) // images, isConfirm, isAutoSave
-    }
-    else if (mode == 'admin') {
-      adminUpdateImages(images, null, true) // images, success, isAutoSave
-    } 
-  }, [currentImageId])
 
   const finish = () => {
 

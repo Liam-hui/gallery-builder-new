@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef, useCallback } from 'react'
 import store from '../store'
 import { useSelector } from "react-redux"
 import { useSpring, animated, to } from 'react-spring'
-import { useGesture } from 'react-use-gesture'
+import { createUseGesture, dragAction, pinchAction } from '@use-gesture/react'
+// import { useGesture } from 'react-use-gesture'
 import { isMobile } from 'react-device-detect'
 import translate from '../utils/translate'
 
@@ -67,10 +68,10 @@ const ViewModeItem = (props) => {
     )
 }
 
-const EditModeItem = ({ type, id, data, imageId, imageSize, isSelected, setSelectedItem, transformStart, editorScale, setMessage }) => {
+const EditModeItem = ({ type, id, data, imageId, imageSize, isSelected, setSelectedItem, transformStart, editorScale, zoomScale, setMessage }) => {
 
     useEffect(() => {
-        set({
+        api.start({
             x: data.x,
             y: data.y,
             rot: data.rot,
@@ -91,12 +92,7 @@ const EditModeItem = ({ type, id, data, imageId, imageSize, isSelected, setSelec
 
     const canEdit = !(type == 'title' && mode != 'admin')
     const [isTransforming, setIsTransforming] = useState(false)
-    // const [isSelected, setisSelected] = useState(false)
     const [isTitleEditorVisible, setIsTitleEditorVisible] = useState(false)
-
-    // useEffect(() => {
-    //     setIsObjectHover(isSelected)
-    // }, [isSelected])
 
     const ref = useRef()
     const gestureTarget = useRef()
@@ -115,7 +111,8 @@ const EditModeItem = ({ type, id, data, imageId, imageSize, isSelected, setSelec
     }
 
     // gesture
-    const [{ x, y, rot, scale, flip, width, height }, set] = useSpring(() => ({
+    const useGesture = createUseGesture([dragAction, pinchAction])
+    const [{ x, y, rot, scale, flip, width, height }, api] = useSpring(() => ({
         x: data.x,
         y: data.y,
         rot: data.rot,
@@ -128,30 +125,39 @@ const EditModeItem = ({ type, id, data, imageId, imageSize, isSelected, setSelec
 
     const preventDefault = useCallback((e) => { e.preventDefault(); }, [])
 
-    const [initialXY, setInitialXY] = useState(null)
     useGesture(
         {
-            onDragStart: () => {
-                setInitialXY({ x: x.get(), y: y.get() })
-            },
-            onDrag: ({ movement }) => {
-                if (initialXY) {
-                    let x = initialXY.x + movement[0] / editorScale
-                    let y = initialXY.y + movement[1] / editorScale
+            onDrag: ({ pinching, cancel, movement, first, memo }) => {
+                if (pinching) return cancel()
+                if (first) {
+                    memo = {
+                        x: x.get(),
+                        y: y.get()
+                    }
+                }
+                else {
+                    let x = memo.x + movement[0] / editorScale / zoomScale
+                    let y = memo.y + movement[1] / editorScale / zoomScale
                     x = Math.max(0, Math.min(x, imageSize.width))
                     y = Math.max(0, Math.min(y, imageSize.height))
-                    set({ x, y })
+                    api.start({ x, y })
                 }
+                return memo
             },
             onDragEnd: () => {
-                setInitialXY(null)
                 updateTransform()
             },
-            onPinch: ({ offset: [d, a] }) => {
-                set({ 
-                    scale: data.scale * (1 + d / 200),
-                    rot: a, 
-                })
+            onPinch: ({ offset: [s, a], first, memo }) => {
+                if (first) {
+                  memo = {
+                    scale: scale.get(),
+                    rot: rot.get(),
+                    s,
+                    a,
+                  }
+                }
+                api.start({ scale: memo.scale * s / memo.s, rot: memo.rot + a - memo.a })
+                return memo
             },
             onPinchStart: () => {
                 window.addEventListener('touchmove', preventDefault, { passive: false })
@@ -161,7 +167,7 @@ const EditModeItem = ({ type, id, data, imageId, imageSize, isSelected, setSelec
                 window.removeEventListener('touchmove', preventDefault)
             },
         },
-        { enabled: canEdit && isSelected, domTarget : gestureTarget, eventOptions: { passive: false } }
+        { enabled: canEdit && isSelected, target : gestureTarget, eventOptions: { passive: false } }
     )
 
     const updateTransform = () => {
@@ -237,7 +243,7 @@ const EditModeItem = ({ type, id, data, imageId, imageSize, isSelected, setSelec
 
         const rot = (temp.rot + ( Math.atan2(y, x) / Math.PI * 180 - temp.angle) ) % 360
         
-        set({ 
+        api.start({ 
             scale,
             rot, 
         })
@@ -280,14 +286,14 @@ const EditModeItem = ({ type, id, data, imageId, imageSize, isSelected, setSelec
         const width = Math.max(minScale / scale.get() / editorScale, temp.width * distX / temp.distX)
         const height = Math.max(minScale / scale.get() / editorScale, temp.height * distY/ temp.distY)
 
-        set({ 
+        api.start({ 
             width,
             height, 
         })
     }
 
     const doFlip = () => {
-        set({ 
+        api.start({ 
             flip: 1 - flip.get(), 
         })
         setTimeout(() => updateTransform(), 100)
@@ -302,7 +308,7 @@ const EditModeItem = ({ type, id, data, imageId, imageSize, isSelected, setSelec
             ) && 
                 <animated.div 
                     className="center-button-wrapper" 
-                    style={{ transform: to([scale, rot], (scale, rot) => `translate(-50%, -50%) rotate(${-rot}deg) scale(${1 / scale})`) }} 
+                    style={{ transform: to([scale, rot], (scale, rot) => `translate(-50%, -50%) rotate(${-rot}deg) scale(${1 / scale / zoomScale})`) }} 
                 >
                     <div 
                         className="center-button"
@@ -312,7 +318,15 @@ const EditModeItem = ({ type, id, data, imageId, imageSize, isSelected, setSelec
                                     type: 'SELECT_HEAD_START', 
                                     selecting: { id, imageId }
                                 })
-                                if (!isMobile)
+                                if (isMobile)
+                                    store.dispatch({ 
+                                        type: 'SET_POPUP', 
+                                        mode: 'empty',
+                                        payload: {
+                                            isSelectingHead: true
+                                        }
+                                    })
+                                else    
                                     store.dispatch({ 
                                         type: 'SET_POPUP', 
                                         mode: 'message',
@@ -322,9 +336,10 @@ const EditModeItem = ({ type, id, data, imageId, imageSize, isSelected, setSelec
                                                 store.dispatch({ type: 'SELECT_HEAD_END' })
                                                 store.dispatch({ type: 'HIDE_POPUP' })
                                             },
-                                            confirmText:translate('finishShort')
+                                            confirmText:translate('finishShort'),
+                                            isSelectingHead: true
                                         }
-                                })
+                                    })
                             }
                             else if (type == "title") {
                                 if (isMobile)
@@ -410,6 +425,7 @@ const EditModeItem = ({ type, id, data, imageId, imageSize, isSelected, setSelec
                     ref={gestureTarget}
                     className='object-drag-area' 
                     draggable="false" 
+                    style={{ touchAction: "none" }}
                 >
                     {isMobile && centerButton}
                 </div>
@@ -418,17 +434,18 @@ const EditModeItem = ({ type, id, data, imageId, imageSize, isSelected, setSelec
 
                 {/* tool */}
                 {(isSelected || isTransforming) &&
-                    <animated.div 
-                        className='tool'
-                        style={{ borderWidth: to([scale], (scale) => 3 / scale) }}
-                    >
+                    <animated.div className='tool'>
+
+                        <svg height="100%" width="100%">
+                            <animated.rect width="100%" height="100%" fill="none" stroke="black" strokeWidth={to([scale], (scale) => 5 / scale / zoomScale)} />
+                        </svg>
 
                         {/* rotate and scale */}
                         {(mode == 'admin' || type == "head") && 
                             <animated.div 
                                 className="tool-button top-right" 
                                 draggable="false" 
-                                style={{ transform: to([scale], (scale) => `scale(${1 / scale})`) }}
+                                style={{ transform: to([scale], (scale) => `scale(${1 /  scale / zoomScale})`) }}
                                 onMouseDown={!isMobile ? rotateStart : null}
                                 onTouchStart={isMobile ? rotateStart : null}
                             >
@@ -441,7 +458,7 @@ const EditModeItem = ({ type, id, data, imageId, imageSize, isSelected, setSelec
                             <animated.div  
                                 className={`tool-button${mode =='admin' ? ' bottom-left' : ' bottom-right'}`}
                                 draggable="false" 
-                                style={{ transform: to([scale], (scale) => `scale(${1 / scale})`), }}
+                                style={{ transform: to([scale], (scale) => `scale(${1 / scale / zoomScale})`), }}
                                 onClick={deleteObject}
                             >
                                 <Icon path={mdiDelete} size={0.9} color="white"/>
@@ -453,7 +470,7 @@ const EditModeItem = ({ type, id, data, imageId, imageSize, isSelected, setSelec
                             <animated.div
                                 className="tool-button bottom-left" 
                                 draggable="false" 
-                                style={{ transform: to([scale], (scale) => `scale(${1 / scale})`), }}
+                                style={{ transform: to([scale], (scale) => `scale(${1 / scale / zoomScale})`), }}
                                 onClick={doFlip}
                             >
                                 <Icon path={mdiFlipHorizontal} size={0.9} color="white"/>

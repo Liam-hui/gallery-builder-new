@@ -15,12 +15,9 @@ function HeadsList() {
 
   const selectHead = (id) => {
     if (isSelecting) {
-      console.log('asdfas', id)
       store.dispatch({ type: 'UPDATE_IMAGE_HEAD', id: selecting.id, imageId: selecting.imageId, data: { headId: id, width: heads[id].width, height: heads[id].height } })
       store.dispatch({ type: 'SELECT_HEAD_END' })
-      if (!isMobile) {
-        store.dispatch({ type: 'HIDE_POPUP' })
-      }
+      store.dispatch({ type: 'HIDE_POPUP' })
     }
   }
 

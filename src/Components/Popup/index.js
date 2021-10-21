@@ -15,7 +15,10 @@ export default function Popup() {
   const { mode } = data
 
   if (mode != null ) return (
-    <div className='popup'>
+    <div 
+      className='popup'
+      style={data.isSelectingHead && { backgroundColor: 'rgba(0, 0, 0, 0.3)' }}
+    >
 
       {mode == 'loading' &&
         <Loading/>

@@ -4,7 +4,8 @@ import store from '../store'
 import translate from '../utils/translate'
 
 import Slider from './Slider'
-import { adminDeleteImage } from '../api/admin'
+import { adminDeleteImage, adminUpdateImages } from '../api/admin'
+import { userUpdateImages } from '../api/user'
 
 function ImagesList() {
 
@@ -25,6 +26,15 @@ function ImagesList() {
       selectedId={currentImageId} 
       selectItem={(id) => {
         store.dispatch({ type: 'SELECT_IMAGE', id: id })
+
+        //auto save
+        if (mode == 'user') {
+          userUpdateImages(images, false, true) // images, isConfirm, isAutoSave
+        }
+        else if (mode == 'admin') {
+          adminUpdateImages(images, null, true) // images, success, isAutoSave
+        } 
+
         if (mode == 'user' && images[id].order == Object.keys(images).length - 1) {
           store.dispatch({ 
             type: 'SET_POPUP', 
