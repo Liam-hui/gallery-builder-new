@@ -314,11 +314,11 @@ const EditModeItem = ({ type, id, data, imageId, imageSize, isSelected, setSelec
                         className="center-button"
                         onClick={() => {
                             if (type == 'head') {
-                                store.dispatch({ 
-                                    type: 'SELECT_HEAD_START', 
-                                    selecting: { id, imageId }
-                                })
-                                if (isMobile)
+                                if (isMobile) {
+                                    store.dispatch({ 
+                                        type: 'SELECT_HEAD_START', 
+                                        selecting: { id, imageId }
+                                    })
                                     store.dispatch({ 
                                         type: 'SET_POPUP', 
                                         mode: 'empty',
@@ -326,18 +326,15 @@ const EditModeItem = ({ type, id, data, imageId, imageSize, isSelected, setSelec
                                             isSelectingHead: true
                                         }
                                     })
+                                }
                                 else    
                                     store.dispatch({ 
                                         type: 'SET_POPUP', 
-                                        mode: 'message',
+                                        mode: 'chooseHead',
                                         payload: {
-                                            message: translate('chooseFace'),
-                                            confirm: () => {
-                                                store.dispatch({ type: 'SELECT_HEAD_END' })
-                                                store.dispatch({ type: 'HIDE_POPUP' })
-                                            },
-                                            confirmText:translate('finishShort'),
-                                            isSelectingHead: true
+                                            id,
+                                            imageId,
+                                            headId: data.headId
                                         }
                                     })
                             }

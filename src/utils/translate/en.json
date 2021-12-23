@@ -30,6 +30,8 @@
     "selectFaceAll":"Use this face for all pages?",
     "downloadImage": "Download Image",
     "finishReminder": "Press 'Finish all editing' after finishing.",
+    "saveSuccessMsg": "Save Success",
+    "finishSuccessMsg": "It takes about 10-15 business days to make the picture book, excluding holidays.\nEmail notification will be sent after the picture book is shipped, thank you again for your purchase.",
 
     "tutorTitle":"Picture book editing instruction",
     "tutor1.1":"Upload photos, one or multiple photos (different expressions on each page) can be uploaded.",

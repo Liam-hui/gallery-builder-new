@@ -31,7 +31,7 @@ function HeadsList() {
       isHighlightAll={isSelecting}
       selectItem={selectHead}
       deleteItem={(id)=>{
-        // if(!images.some(image=>image.iconId==id)) store.dispatch({type:'DELETE_ICON',id:id});
+        
       }}
       style={isSelecting ? { zIndex: 9999999999 } : {}}
     />

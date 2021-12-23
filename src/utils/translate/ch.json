@@ -30,6 +30,8 @@
     "selectFaceAll":"選擇頭像至全部頁數？",
     "downloadImage": "下載圖片",
     "finishReminder": "完成後請按「完成整本編輯」",
+    "saveSuccessMsg": "儲存成功",
+    "finishSuccessMsg": "繪本制作需時約10～15個工作天，不含假日\n寄出後會發出email 通知，再次感謝你的購買。",
 
     "tutorTitle":"繪本編輯教學",
     "tutor1.1":"上傳照片，可以上傳一張、或多張（每頁不同表情）。",

@@ -9,6 +9,9 @@ import { mdiRedoVariant, mdiPlusThick, mdiArrowLeftBold, mdiMagnifyPlusOutline, 
 import translate from '../utils/translate'
 import ObjectItem from './Object'
 
+import { adminUpdateImages } from '../api/admin'
+import { userUpdateImages } from '../api/user'
+
 const Editor = () => {
 
   const editorRef = useRef()
@@ -68,6 +71,16 @@ const Editor = () => {
 
   // force re-render
   const forceUpdate = useSelector(state => state.images.forceUpdate)
+  useEffect(() => {
+    if (forceUpdate > 0) {
+      if (mode == 'user') {
+        userUpdateImages(images, false, true) // images, isConfirm, isAutoSave
+      }
+      else if (mode == 'admin') {
+        adminUpdateImages(images, null, true) // images, success, isAutoSave
+      } 
+    }
+  }, [forceUpdate])
 
   const [selectedItem, setSelectedItem] = useState(null)
 

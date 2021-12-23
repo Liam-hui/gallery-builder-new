@@ -23,7 +23,7 @@ const UploadTutorial = () => {
       <label className='border-button' style={{ padding: 10, marginTop: 10, marginBottom: 15 }} htmlFor="upload-image">{translate('uploadPhoto')}</label>
 
       <div style={{ position: 'absolute', top: 0, left: 0, padding: 10, cursor: 'pointer' }} onClick={() => store.dispatch({ type:'HIDE_POPUP' })}>
-        <Icon path={mdiCloseThick} style={{ transform:`translate(0.5px,0.5px)` }} size={0.9} color="black"/>   
+        <Icon path={mdiCloseThick} style={{ transform:`translate(0.5px, 0.5px)` }} size={0.9} color="black"/>   
       </div>
 
     </div>

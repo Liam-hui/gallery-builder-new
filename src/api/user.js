@@ -163,8 +163,12 @@ export const userUpdateImages = (images, isConfirm, isAutoSave) => {
   api.post('album/customerUpdatePhoto', body)
   .then((response) => {
     console.log(response.data)
-    if (!isAutoSave)
-      store.dispatch({ type: 'SET_POPUP', mode: 'message', payload: { message: response.data.message } })
+    if (!isAutoSave) {
+      if (response.status == 200) {
+        store.dispatch({ type: 'SET_POPUP', mode: 'message', payload: { message: isConfirm ? translate('finishSuccessMsg') : translate('saveSuccessMsg') } })
+      }
+      else store.dispatch({ type: 'SET_POPUP', mode: 'message', payload: { message: response.data.message } })
+    }
   }, (error) => {
     console.log(error.response.data)
     if (!isAutoSave)

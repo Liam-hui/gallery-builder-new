@@ -8,6 +8,7 @@ import Tutorial from './Tutorial'
 import UploadTutorial from './UploadTutorial'
 import EnterBabyName from './EnterBabyName'
 import TitleEditor from '../TitleEditor'
+import ChooseHead from './ChooseHead'
 
 export default function Popup() {
 
@@ -46,6 +47,10 @@ export default function Popup() {
 
       {mode == 'enterBabyName' &&
         <EnterBabyName/>
+      }
+
+      {mode == 'chooseHead' &&
+        <ChooseHead/>
       }
 
     </div>

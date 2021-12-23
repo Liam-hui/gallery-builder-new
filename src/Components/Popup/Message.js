@@ -8,9 +8,9 @@ const Message = () => {
   const { message, confirm, confirmText, canCancel, cancel, noNeedHide } = useSelector(state => state.popup)
 
   return (
-    <div className='popup-box' style={{ width: 340, height: 250 }}>
+    <div className='popup-box' style={{ width: 340, minHeight: 250 }}>
 
-      <p>{message}</p>
+      <p style={{ whiteSpace: "pre-wrap" }}>{message}</p>
 
       <div style={{ display: 'flex' }}>
         <div 
