@@ -165,7 +165,7 @@ export const userUpdateImages = (images, isConfirm, isAutoSave) => {
     console.log(response.data)
     if (!isAutoSave) {
       if (response.status == 200) {
-        store.dispatch({ type: 'SET_POPUP', mode: 'message', payload: { message: isConfirm ? translate('finishSuccessMsg') : translate('saveSuccessMsg') } })
+        store.dispatch({ type: 'SET_POPUP', mode: 'message', payload: { confirm: isConfirm ? window.closeApp : null, message: isConfirm ? translate('finishSuccessMsg') : translate('saveSuccessMsg') } })
       }
       else store.dispatch({ type: 'SET_POPUP', mode: 'message', payload: { message: response.data.message } })
     }
