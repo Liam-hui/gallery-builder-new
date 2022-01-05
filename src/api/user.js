@@ -121,8 +121,14 @@ export const userGetImages = (orderId, productId) => {
 }
 
 export const userUpdateImages = (images, isConfirm, isAutoSave) => {
-  if (!isAutoSave)
+  if (!isAutoSave) {
     store.dispatch({ type: 'SET_POPUP', mode: 'loading', payload: { message: translate('loading') } })
+  }
+
+  let fakeHeadId;
+  if (isConfirm) {
+    fakeHeadId = Object.keys(store.getState().heads.data)[0];
+  }
 
   const data = {}
   for (const id in images) {
@@ -140,7 +146,7 @@ export const userUpdateImages = (images, isConfirm, isAutoSave) => {
         ],
         rotate: head.rot,
         flip: head.flip,
-        photo: head.headId ?? null
+        photo: head.headId ?? (isConfirm ? fakeHeadId : null)
       }
     })
 

@@ -106,14 +106,16 @@ const Actions = () => {
         const image = images[imageId]
         for (const id in image.heads) {
           const head = image.heads[id]
-          if (head.headId == null)
+          if (head.headId == null && head.height > 0 && head.width > 0) {
             return false
+          }
         }
       }
       return true
     }
 
     if (isAllHeadSelected()) {
+
       if (isMobile) 
         store.dispatch({ type: 'SET_STATUS', payload: { mode: 'saveView' } })
       else
