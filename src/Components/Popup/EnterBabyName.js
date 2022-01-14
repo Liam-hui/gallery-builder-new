@@ -17,7 +17,7 @@ const EnterBabyName = () => {
     <div className='popup-box' style={{ width: 340, height: 250 }}>
 
       <p style={{ marginBottom: 20 }}>{translate('enterText')}</p>
-      <textarea style={{ marginBottom: 20 }} wrap="off" value={text} onChange={(event)=>setText(event.target.value)} className='babyname-input'/>
+      <input type="text" maxlength="10" style={{ marginBottom: 20 }} wrap="off" value={text} onChange={(event)=>setText(event.target.value)} className='babyname-input'/>
 
       <div style={{ display: 'flex' }}>
         <div 

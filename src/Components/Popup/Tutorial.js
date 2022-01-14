@@ -12,7 +12,7 @@ const Tutorial = () => {
       <div className='scroll-container'>
 
       <iframe 
-        src={window.lang = "zh-TW" ? "https://www.youtube.com/embed/1hX6B5VB_4M" : "https://www.youtube.com/embed/f3EfWhLMLbM"}
+        src={window.lang == "zh-TW" ? "https://www.youtube.com/embed/7l8qnjQfl6M" : "https://www.youtube.com/embed/nzZRMmHBpmA"}
         title="Tutorial Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen
       />
 
