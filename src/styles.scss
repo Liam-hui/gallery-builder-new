@@ -887,15 +887,21 @@ html, body, #gallery-builder-root {
     padding: 25px;
   }
 
-  p {
+  .para {
     display: flex;
     flex-direction: row;
+    margin-bottom: 20px;
     color:black;
-    font-size: 16px !important;
-    margin-bottom: 15px !important;
-
-    p {
-      margin: 0 10px !important;
+    font-size: 16px;
+    & > div {
+      margin-left: 10px;
+    }
+    .row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-top: 5px;
+      margin-bottom: 5px;
     }
   }
   

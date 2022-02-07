@@ -13,6 +13,7 @@ export const userGetImages = (orderId, productId) => {
 
     // add images
     const images = toArrayOrderBySequence(response.data.data.photo_details[productId])
+
     let count = 0
     for (const image of images) {
 
@@ -35,7 +36,7 @@ export const userGetImages = (orderId, productId) => {
             y: Math.max(0, Math.min(y, this.height)),
             rot: parseFloat(head.rotate),
             scale: 1,
-            flip: 0
+            flip: head.flip
           }
         }
 
@@ -115,7 +116,7 @@ export const userGetImages = (orderId, productId) => {
 
   }, (error) => {
     if (error && error.response) 
-      console.log(error.response.data)
+      console.log(error.response)
     store.dispatch({ type: 'HIDE_POPUP' })
   })
 }
@@ -176,7 +177,8 @@ export const userUpdateImages = (images, isConfirm, isAutoSave) => {
       else store.dispatch({ type: 'SET_POPUP', mode: 'message', payload: { message: response.data.message } })
     }
   }, (error) => {
-    console.log(error.response.data)
+    if (error && error.response) 
+      console.log(error.response)
     if (!isAutoSave)
       store.dispatch({ 
         type: 'SET_POPUP', 

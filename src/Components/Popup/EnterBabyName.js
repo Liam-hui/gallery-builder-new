@@ -11,31 +11,35 @@ import { getTitleImage } from '..//../api/misc'
 const EnterBabyName = () => {
 
   const images = useSelector(state => state.images.data)
-  const [text,setText] = useState('');
+  const [text, setText] = useState('');
+
+  const updateAllImages = async() => {
+    for (const id in images) {
+      const image = images[id]
+      if (image.titles) {
+        for (const titleId in image.titles) {
+          const title = image.titles[titleId]
+          if (title.adminTitle) {
+            const titleImage = await getTitleImage(id, getTitle(title.adminTitle, text))
+            store.dispatch({ type: 'UPDATE_IMAGE_TITLE', id: titleId, imageId: id, data: { id: titleImage.id, url: titleImage.base64 } })
+          }
+        }
+      }
+    }
+  }
 
   return (
     <div className='popup-box' style={{ width: 340, height: 250 }}>
 
-      <p style={{ marginBottom: 20 }}>{translate('enterText')}</p>
-      <input type="text" maxlength="10" style={{ marginBottom: 20 }} wrap="off" value={text} onChange={(event)=>setText(event.target.value)} className='babyname-input'/>
+      <p style={{ marginBottom: 20 }}>{translate('enterTextAtFirst')}</p>
+      <input type="text" maxLength="10" style={{ marginBottom: 20 }} wrap="off" value={text} onChange={(event)=>setText(event.target.value)} className='babyname-input'/>
 
       <div style={{ display: 'flex' }}>
         <div 
           className='border-button' 
-          onClick={async () => {
-            for (const id in images) {
-              const image = images[id]
-              if (image.titles) {
-                for (const titleId in image.titles) {
-                  const title = image.titles[titleId]
-                  if (title.adminTitle) {
-                    const titleImage = await getTitleImage(id, getTitle(title.adminTitle, text))
-                    store.dispatch({ type: 'UPDATE_IMAGE_TITLE', id: titleId, imageId: id, data: { id: titleImage.id, url: titleImage.base64 } })
-                  }
-                }
-              }
-            }
-            store.dispatch({ type:'SET_POPUP',mode:'tutorial' })
+          onClick={() => {
+            store.dispatch({ type:'SET_POPUP',mode:'tutorial' });
+            updateAllImages();
           }}
         >
           {translate('ok')}

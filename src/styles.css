@@ -1129,7 +1129,7 @@ html, body, #gallery-builder-root {
   padding: 25px;
 }
 
-.tutorial-container p {
+.tutorial-container .para {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1137,13 +1137,28 @@ html, body, #gallery-builder-root {
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
           flex-direction: row;
+  margin-bottom: 20px;
   color: black;
-  font-size: 16px !important;
-  margin-bottom: 15px !important;
+  font-size: 16px;
 }
 
-.tutorial-container p p {
-  margin: 0 10px !important;
+.tutorial-container .para > div {
+  margin-left: 10px;
+}
+
+.tutorial-container .para .row {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .tutorial-container .icon-wrapper {

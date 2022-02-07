@@ -11,62 +11,60 @@ const Tutorial = () => {
 
       <div className='scroll-container'>
 
-      <iframe 
-        src={window.lang == "zh-TW" ? "https://www.youtube.com/embed/7l8qnjQfl6M" : "https://www.youtube.com/embed/nzZRMmHBpmA"}
-        title="Tutorial Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen
-      />
+        <iframe 
+          src={window.lang == "zh-TW" ? "https://www.youtube.com/embed/7l8qnjQfl6M" : "https://www.youtube.com/embed/nzZRMmHBpmA"}
+          title="Tutorial Video" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen
+        />
 
-        <p>{translate('tutorTitle')}</p>
+        <div className="para">{translate('tutorTitle')}</div>
 
-        <p>
+        <div className="para">
           <span>1:</span>
-          <p>
+          <div>
             {translate('tutor1.1')}
             <br/>
             {translate('tutor1.2')}
             <br/>
             {translate('tutor1.3')}
-          </p>
-        </p>
+          </div>
+        </div>
 
-        <p>
+        <div className="para">
           <span>2:</span>
-          <p>
+          <div>
             {translate('tutor2.1')}
             <br/>
             {translate('tutor2.2')}
             <br/>
             {translate('tutor2.3')}
-          </p>
-        </p>
-
-        <p style={{ alignItems: 'center', marginLeft: 20 }}>
-          <div className='icon-wrapper'>
-            <Icon path={mdiRotateLeft} size={0.9} color="white"/>
+            <div className='row'>
+              <div className='icon-wrapper'>
+                <Icon path={mdiRotateLeft} size={0.9} color="white"/>
+              </div>
+              &nbsp;&nbsp;&nbsp;{translate('tutor2.4')}
+            </div>
+            <div className='row'>
+              <div className='icon-wrapper'>
+                <Icon path={mdiFlipHorizontal} size={0.9} color="white"/>
+              </div>
+              &nbsp;&nbsp;&nbsp;{translate('tutor2.5')}
+            </div>
           </div>
-          &nbsp;&nbsp;&nbsp;{translate('tutor2.4')}
-        </p>
+        </div>
 
-        <p style={{ alignItems: 'center', marginLeft: 20 }}>
-          <div className='icon-wrapper'>
-            <Icon path={mdiFlipHorizontal} size={0.9} color="white"/>
-          </div>
-          &nbsp;&nbsp;&nbsp;{translate('tutor2.5')}
-        </p>
-
-        <p>
+        <div className="para">
           <span>3:</span>
-          <p>{translate('tutor3.1')}</p>
-        </p>
+          <div>{translate('tutor3.1')}</div>
+        </div>
 
-        <p>
+        <div className="para">
           <span>4:</span>
-          <p>
+          <div>
             {translate('tutor4.1')}
             <br/>
             {translate('tutor4.2')}
-          </p>
-        </p>
+          </div>
+        </div>
       </div>
 
       <div 
