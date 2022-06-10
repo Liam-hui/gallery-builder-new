@@ -48,7 +48,7 @@ export const userGetImages = (orderId, productId) => {
             base64 = base64.data.data
           }
           else {
-            const titleImage = await getTitleImage(image.id, getTitle(image.admin_title, 'test'))
+            const titleImage = await getTitleImage(image.id, getTitle(image.admin_title, " "))
             id = titleImage.id
             base64 = titleImage.base64
           }

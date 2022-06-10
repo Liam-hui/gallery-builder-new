@@ -14,6 +14,7 @@ const EnterBabyName = () => {
   const [text, setText] = useState('');
 
   const updateAllImages = async() => {
+    store.dispatch({ type: 'SET_POPUP', mode: 'loading', payload: { message: translate('loading') } })
     for (const id in images) {
       const image = images[id]
       if (image.titles) {
@@ -26,6 +27,8 @@ const EnterBabyName = () => {
         }
       }
     }
+    store.dispatch({ type:'HIDE_POPUP' })
+    store.dispatch({ type:'SET_POPUP',mode: 'tutorial' });
   }
 
   return (
@@ -38,8 +41,9 @@ const EnterBabyName = () => {
         <div 
           className='border-button' 
           onClick={() => {
-            store.dispatch({ type:'SET_POPUP',mode:'tutorial' });
-            updateAllImages();
+            if (text != "") {
+              updateAllImages();
+            }
           }}
         >
           {translate('ok')}
@@ -54,7 +58,7 @@ const EnterBabyName = () => {
   )
 }
 
-export default EnterBabyName
+export default EnterBabyName;
 
 
 

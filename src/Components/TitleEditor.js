@@ -126,14 +126,14 @@ const AdminEditor = ({ data, editorTopRef, id, imageId, setIsTitleEditorVisible 
 
 const UserEditor = ({ data, editorTopRef, id, imageId, setIsTitleEditorVisible }) => {
 
-    const [text, setText] = useState(data.title)
+    const [text, setText] = useState("")
 
     const handleTextChange = (e) => {
         setText(e.target.value)
     }
 
     const confirm = async () => {
-        const titleImage = await getTitleImage(imageId, getTitle(data.adminTitle, text))
+        const titleImage = await getTitleImage(imageId, getTitle(data.adminTitle, text?.replace(/\n/g, " ")))
         store.dispatch({ type: 'UPDATE_IMAGE_TITLE', id, imageId, data: { id: titleImage.id, url: titleImage.base64 } })
 
         if (isMobile)
